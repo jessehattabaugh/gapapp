@@ -1,0 +1,94 @@
+* {
+  box-sizing: border-box; }
+
+.reset, body, #app fieldset, #app .options, #app .options:not(.expanded) li:not(.selected), #app .values, #app .values:not(.expanded) li:not(.selected) {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent; }
+
+.hidden {
+  display: none; }
+
+.highlighted {
+  background-color: yellow;
+  color: blue; }
+
+body {
+  background-image: -webkit-linear-gradient(blue 0%, #a8a8f0 100%);
+  background-attachment: fixed; }
+
+#app {
+  display: block;
+  color: white;
+  font-family: sans-serif;
+  height: 100%; }
+  #app fieldset {
+    margin-top: 20px; }
+    #app fieldset legend {
+      padding: 5px;
+      padding-left: 10px; }
+  #app h1 {
+    background: black;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center; }
+  #app .options li {
+    list-style: none;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 5px;
+    padding-left: 10px;
+    margin-bottom: 5px; }
+    #app .options li.selected {
+      background: rgba(255, 255, 255, 0.5); }
+      #app .options li.selected .icon:before {
+        content: "x"; }
+    #app .options li .icon {
+      position: absolute;
+      right: 5px;
+      top: 0px;
+      border-radius: 10px;
+      background: white;
+      display: block;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      color: blue; }
+      #app .options li .icon:before {
+        content: "+"; }
+    #app .options li .value {
+      position: absolute;
+      right: 5px;
+      top: 0px; }
+  #app .options:not(.expanded) li:not(.selected) {
+    height: 0px;
+    overflow: hidden; }
+  #app .values:not(.expanded) li:not(.selected) {
+    height: 0px;
+    overflow: hidden; }
+  #app .expander {
+    padding: 5px;
+    padding-left: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ccccff; }
+
+@media screen and (min-width: 500px) {
+  #app form, #app .options.expanded, #app .values.expanded {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 300px; }
+  #app h1 {
+    background: rgba(100, 100, 255, 0.75); }
+  #app .options.expanded {
+    position: absolute;
+    top: 0px;
+    left: 305px;
+    width: 610px; }
+    #app .options.expanded li {
+      width: 300px; }
+  #app .values.expanded {
+    position: absolute;
+    top: 0px;
+    left: 305px;
+    width: 300px; } }

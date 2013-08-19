@@ -1,42 +1,252 @@
-<!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>PhoneGap</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <title>Gap App</title>
+  </head>
+  <body>
+  
+    <main id="app">
+      
+      <form data-bind="css: {hidden: loading()}">
+        
+        <h1>Patient Details</h1>
+        
+        <fieldset class="">
+          <legend>Gender</legend>
+          <label><input type="radio" name="gender" value="male" data-bind="checked: gender">Male</label>
+          <label><input type="radio" name="gender" value="female" data-bind="checked: gender">Female</label>
+        </fieldset>
+        
+        <fieldset>
+          <legend>Age</legend>
+          <input type="range">
+        </fieldset>
+        
+        <fieldset>
+          <legend>Neurological Symptoms</legend>
+          
+          <ul class="options" data-bind="
+            foreach: symptoms.array,
+            css: {expanded: optionsExpanded() == 'symptoms'}
+          ">
+            <li data-bind="
+              css: {selected: $data.value()},
+              click: function(){
+                $parent.toggle($data.value);
+              }
+            ">
+              <div style="position: relative">
+                <span class="label" data-bind="text: label"></span>
+                <span class="icon"></span>
+              </div>
+            </li>
+          </ul>
+          
+          <div class="expander" data-bind="
+            click: function(){ toggle(optionsExpanded, 'symptoms') }, 
+            css: {highlighted: optionsExpanded() == 'symptoms'},
+            text: (optionsExpanded() == 'symptoms')? 'Finished': 'Add'">
+          </div>
+        </fieldset>
+        
+        <fieldset>
+          <legend>Clinical Considerations</legend>
+          
+          <ul class="options" data-bind="
+            foreach: clinicalConsiderations.array,
+            css: {expanded: optionsExpanded() == 'clinicalConsiderations'}
+          ">
+            <li data-bind="
+              css: {selected: $data.value()},
+              click: function(){
+                $parent.toggle($data.value);
+              }
+            ">
+              <div style="position: relative">
+                <span class="label" data-bind="text: label"></span>
+                <span class="icon"></span>
+              </div>
+            </li>
+          </ul>
+          
+          <div class="expander" data-bind="
+            click: function(){ toggle(optionsExpanded, 'clinicalConsiderations') }, 
+            css: {highlighted: optionsExpanded() == 'clinicalConsiderations'},
+            text: (optionsExpanded() == 'clinicalConsiderations')? 'Finished': 'Add'">
+          </div>
+          
+        </fieldset>
+        
+        <fieldset>
+          <legend>Laboratory Tests</legend>
+          
+          <ul class="options" data-bind="
+            foreach: {data: laboratoryTests.array, as: 'option'},
+            css: {expanded: optionsExpanded() == 'laboratoryTests'}
+          ">
+            <li data-bind="
+              css: {selected: option.value()},
+              click: function(){
+                if(option.value()){
+                  option.value(false);
+                }
+                $root.toggle($root.valuesExpanded, option.name);
+              }
+            ">
+              <div style="position: relative">
+                <span class="label "data-bind="text: label"></span>
+                <span class="value" data-bind="
+                  visible: option.value,
+                  text: option.value() + ' ' + option.unit
+                "></span>
+              </div>
+              
+              
+              <ul class="values" data-bind="
+                foreach: {data: $root.valueArray(option), as: 'value'},
+                css: {expanded: $root.valuesExpanded() == option.name}">
+                <li data-bind="
+                  text: value + ' ' + option.unit,
+                  click: function (d,e){
+                    $root.toggle(option.value, value);
+                    $root.toggle($root.valuesExpanded, option.name);
+                    e.stopPropagation();
+                  }
+                ">
+                </li>
+              </ul>
+            </li>
+          </ul>
+          
+          <div class="expander" data-bind="
+            click: function(){ toggle(optionsExpanded, 'laboratoryTests') }, 
+            css: {highlighted: optionsExpanded() == 'laboratoryTests'},
+            text: (optionsExpanded() == 'laboratoryTests')? 'Finished': 'Add'">
+          </div>
+          
+        </fieldset>
+        
+        <div class="highlighted">
+          Calculate
         </div>
-        <script type="text/javascript" src="phonegap.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+        
+      </form>
+      
+    </main>
+    
+    <script type="text/javascript" src="js/knockout-2.3.0.debug.js"></script>
+    <script type="text/javascript">
+    
+      function AssociativeArray(array, key) {
+        // wraps an array of objects with accessors for each element named by the value of the object's key property
+        this.array = array;
+        
+        for (var i = 0, len = this.array.length; i < len; i++) {
+          this[this.array[i][key]] = function (index) {
+            return function AssociativeArrayAccessor() {
+              return this.array[index];
+            }
+          }(i);
+        }
+      }
+    
+      var app = {
+  
+        inPhoneGap: !document.URL.match(/^(https?|file):/),
+        
+        viewModel: {
+          loading: ko.observable(true),
+          gender: ko.observable(),
+          toggle: function(prop, val){
+            // prop - a ko.observable to toggle between true/false or val/false
+            // val - the value to toggle from or to
+            
+            if(!val){ // no val supplied
+              val = true; // default to true
+            }
+            
+            if(prop() == val){ 
+              prop(false);
+            } else {
+              prop(val);
+            }
+          },
+          optionsExpanded: ko.observable(),
+          valuesExpanded: ko.observable(),
+          
+          valueArray: function (option){
+            var out = [];
+            for(v = option.min; v <= option.max; v += option.step){
+              out.push(v);
+            }
+            return out;
+          },
+          symptoms: new AssociativeArray([
+            { name: 'anorexia',     label: 'Anorexia',      value: ko.observable() },
+            { name: 'confusion',    label: 'Confusion',     value: ko.observable() },
+            { name: 'fatigue',      label: 'Fatigue',       value: ko.observable() },
+            { name: 'headache',     label: 'Headache',      value: ko.observable() },
+            { name: 'malaise',      label: 'Malaise',       value: ko.observable() },
+            { name: 'muscleCramps', label: 'Muscle cramps', value: ko.observable() },
+            { name: 'nausea',       label: 'Nausea',        value: ko.observable() },
+            { name: 'unsteadiness', label: 'Unsteadiness',  value: ko.observable() },
+            { name: 'vomiting',     label: 'Vomiting',      value: ko.observable() }
+          ], 'name'),
+          
+          clinicalConsiderations: new AssociativeArray([
+            { name: 'adrenalInsufficiency',   label: 'Adrenal insufficiency',   value: ko.observable() },
+            { name: 'cirrhosis',              label: 'Cirrhosis',               value: ko.observable() },
+            { name: 'cnsImpairment',          label: 'CNS impairment',           value: ko.observable() },
+            { name: 'congestiveHeartFailure', label: 'Congestive heart failure',  value: ko.observable() },
+            { name: 'hypothyroidism',         label: 'Hypothyroidism',          value: ko.observable() },
+            { name: 'renalDysfunction',       label: 'Renal dysfunction',        value: ko.observable() },
+            { name: 'siadh',                  label: 'SIADH',                   value: ko.observable() },
+            { name: 'surgeryOrInjury',        label: 'Surgery or injury',         value: ko.observable() },
+            { name: 'veryYoungOrOldAge',      label: 'Very young/old age',       value: ko.observable() }
+          ], 'name'),
+          
+          laboratoryTests: new AssociativeArray([
+            { name: 'serumNa',  label: 'Serum [Na+]', value: ko.observable(),  unit: 'mEq/l',  min: 20, max: 60, step: 10 },
+            { name: 'serumK',   label: 'Serum [K+]',  value: ko.observable(),  unit: 'g',  min: 10, max: 200, step: 20 },
+            { name: 'uricAcid', label: 'Uric acid',   value: ko.observable(),  unit: 'lbs',  min: 60, max: 92, step: 12 },
+            { name: 'bun',      label: 'BUN',         value: ko.observable(),  unit: 'sqft',  min: 430, max: 600, step: 60 },
+            { name: 'serumCr',  label: 'Serum Cr',    value: ko.observable(),  unit: 'nm',  min: 1, max: 10, step: .5 },
+            { name: 'plasmaOsmolality', label: 'Plasma osmolality', value: ko.observable(),  unit: 'qts',  min: 20, max: 90, step: 4 },
+            { name: 'urineOsmolality',  label: 'Urine osmolality',  value: ko.observable(),  unit: 'in',  min: 150, max: 250, step: 30},
+            { name: 'urineSpecificGravity', label: 'Urine specific gravity',  value: ko.observable(),  unit: 'gal',  min: 700, max: 1980, step: 130 },
+            { name: 'urineSodium',  label: 'Urine sodium',  value: ko.observable(),  unit: 'ml',  min: 120, max: 129, step: 1 },
+            { name: 'urinePotassium', label: 'Urine potassium', value: ko.observable(),  unit: 'ft',  min: 120, max: 129, step: 1 }
+          ], 'name')
+        },
+      
+        initialize: function() {
+        
+          ko.applyBindings(this.viewModel, document.getElementById('app'));
+          
+          // Load phonegap.js if we're in phonegap
+          if(this.inPhoneGap){
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "phonegap.js";
+            document.body.appendChild(script);
+            
+            document.addEventListener('deviceready', this.afterLoad);
+          } else {
+            window.addEventListener('load', this.afterLoad);
+          }
+          
+        },
+        
+        afterLoad: function(){
+          app.viewModel.loading(false);
+        }
+      };
+
+      app.initialize();
+    </script>
+  </body>
 </html>
