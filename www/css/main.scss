@@ -1,4 +1,6 @@
-$blue: blue;
+$blue: rgb(0, 0, 143);
+$lightBlue: rgb(51, 167, 255);
+$yellow: rgb(252, 212, 0);
 $block-indent: 10px;
 $col-width: 300px;
 $icon-size: 20px;
@@ -7,35 +9,24 @@ $icon-size: 20px;
   box-sizing: border-box;
   //-webkit-transition: all 1s;
 }
-.reset {
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-}
-.hidden {
-  display: none;
-}
-.highlighted{
-  background:{
-    color: yellow;
-  }
-  color: $blue;
-}
+
+
 body {
   @extend .reset;
   background:{
-    image: -webkit-linear-gradient($blue 0%, desaturate(lighten($blue, 30), 30) 100%);
+    image: -webkit-linear-gradient($blue 0%, $lightBlue 100%);
     attachment: fixed;
   }
 }
 
 #app {
   display: block;
-  
   color: white;
   font-family: sans-serif;
   height: 100%;
+  
+  
+  
   fieldset {
     @extend .reset;
     margin:{
@@ -61,7 +52,6 @@ body {
       padding: 5px;
       padding-left: $block-indent;
       margin-bottom: 5px;
-      //position: relative;
       &.selected {
         background: transparentize(lighten(blue, 100), .5);
         .icon{
@@ -74,13 +64,7 @@ body {
         position: absolute;
         right: 5px;
         top: 0px;
-        border-radius: $icon-size/2;
-        background: white;
-        display: block;
-        width: $icon-size;
-        height: $icon-size;
-        text-align: center;
-        color: $blue;
+        
         &:before{
           content: "+";
         }
@@ -118,9 +102,55 @@ body {
     background:{
       color: transparentize(lighten(blue, 60), .8);
     }
-    color: lighten(saturate($blue, 20), 40);
+    color: $lightBlue;
   }
   
+  #results{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+  
+  footer{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 5px;
+    &.highlighted{
+      text-align: right;
+    }
+  }
+  
+  /* Extensible/General Classes ***********************************************/
+  .reset {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+  .hidden {
+    display: none;
+  }
+  .icon{
+    display: inline-block;
+    border-radius: $icon-size/2;
+    width: $icon-size;
+    height: $icon-size;
+    text-align: center;
+    background: transparentize(white, .5);
+    color: $blue;
+  }
+  .highlighted{
+    background:{
+      color: $yellow;
+    }
+    color: $blue;
+    .icon{
+      background: $blue;
+      color: $yellow;
+    }
+  }
 }
 
 @media screen and (min-width: 500px) {

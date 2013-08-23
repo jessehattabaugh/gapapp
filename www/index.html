@@ -11,7 +11,7 @@
   
     <main id="app">
       
-      <form data-bind="css: {hidden: loading()}">
+      <form ="patientDetails" data-bind="css: {hidden: loading() || calculating()}">
         
         <h1>Patient Details</h1>
         
@@ -39,7 +39,7 @@
                 $parent.toggle($data.value);
               }
             ">
-              <div style="position: relative">
+              <div style="position: relative;">
                 <span class="label" data-bind="text: label"></span>
                 <span class="icon"></span>
               </div>
@@ -123,18 +123,42 @@
           </ul>
           
           <div class="expander" data-bind="
-            click: function(){ toggle(optionsExpanded, 'laboratoryTests') }, 
+            click: function(){ toggle(optionsExpanded, 'laboratoryTests'); }, 
             css: {highlighted: optionsExpanded() == 'laboratoryTests'},
             text: (optionsExpanded() == 'laboratoryTests')? 'Finished': 'Add'">
           </div>
           
         </fieldset>
         
-        <div class="highlighted">
-          Calculate
-        </div>
-        
       </form>
+      
+      <article id="results" data-bind="visible: calculating">
+        <section>
+          <h1>FluRex* Score <small>*Estimated overall probability of success for fluid restriction</small></h1>
+          <div class="circle">81<sub>%</sub></div>
+          <hr>
+          <dl>
+            <dt>Mean Days for Response</dt>
+              <dd>2.7</dd>
+          </dl>
+        </section>
+        <section>
+          <h1>Serum [Na+] Correction</h1>
+          <figure>
+            <figcaption>
+              Est. Mean 2.7 days<br>
+              95% CI: 0.9-4.6 days
+            </figcaption>
+          </figure>
+        </section>
+      </article>
+      
+      <footer data-bind="
+        click: function(){ toggle(calculating); },
+        css: { highlighted: !calculating() }">
+        <span data-bind="text: calculating()? '': 'Calculate'"></span>
+        <span class="icon" data-bind="text: calculating()? '&lt;': '&gt;'"></span>
+      </footer>
       
     </main>
     
@@ -160,6 +184,7 @@
         
         viewModel: {
           loading: ko.observable(true),
+          calculating: ko.observable(false),
           gender: ko.observable(),
           toggle: function(prop, val){
             // prop - a ko.observable to toggle between true/false or val/false
