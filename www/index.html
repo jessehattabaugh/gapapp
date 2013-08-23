@@ -1,277 +1,532 @@
 <html>
   <head>
+  
+    <title>3 Column Adaptive</title>
+    
     <meta charset="utf-8" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=device-dpi" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="format-detection" content="telephone=no" />
-    <link href="css/main.css" rel="stylesheet" type="text/css">
-    <title>Gap App</title>
+    
+    <style>
+      *{
+        box-sizing: border-box;
+      }
+      body{
+        margin: 0;
+        padding: 0;
+        color: white;
+        font-family: sans-serif;
+        background-attachment: fixed;
+        background-image: -webkit-linear-gradient(rgb(0, 0, 143) 0%, rgb(51, 167, 255) 100%);
+      }
+      ul{
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+      fieldset{
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
+      .page{
+        
+      }
+      .col{
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+      }
+      .left{
+        width: 100%;
+      }
+      .center{
+        display: none;
+      }
+      .right{
+        display: none;
+      }
+      .col-header{
+        position: fixed;
+        z-index: 100;
+        margin: 0;
+        font-weight: normal;
+      }
+      .center .col-header, .right .col-header{
+        color: rgb(251, 213, 0);
+      }
+      .field-label{
+        padding-left: 15px;
+        padding-bottom: 5px;
+        padding-top: 30px
+      }
+      .field{
+        padding: 8px;
+        padding-left: 20px;
+        display: none;
+        background: rgba(255, 255, 255, 0.3);
+        color: rgb(55, 185, 252);
+        margin-top: 2px;
+      }
+      .current-value{
+        position: absolute;
+        right: 40px;
+      }
+      .icon{
+        position: absolute;
+        right: 10px;
+        display: inline-block;
+        border-radius: 10px;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        border: 1px solid rgb(55, 185, 252);
+        vertical-align: middle;
+      }
+      .expanded > .field,
+      .expanded > .value,
+      .left .field.filled{
+        display: block;
+      }
+      .filled{
+        background: rgba(255, 255, 255, 0.4);
+        color: white;
+      }
+      .filled .icon{
+        background: white;
+        border: none;
+        color: rgb(55, 185, 252);
+      }
+      .filled .icon:before{
+        content: 'x';
+      }
+      .value{
+        padding: 5px;
+        padding-left: 30px;
+        display: none;
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .expander{
+        display: block;
+        padding: 5px;
+        padding-left: 20px;
+        background: rgba(255, 255, 255, 0.3);
+        color: rgb(55, 185, 252);
+      }
+      .expander.active{
+        background-color: rgb(251, 213, 0);
+        color: rgb(0, 0, 143);
+      }
+      .calculateButton{
+        background: rgb(251, 213, 0);
+        width: 100%;
+        padding: 10px;
+        height: 35px;
+        text-align: right;
+        color: rgb(0, 0, 143);
+      }
+      .calculateButton .icon{
+        background: rgb(0, 0, 143);
+        border: none;
+        position: static;
+        color: rgb(251, 213, 0);
+      }
+      ..calculateButton.active .icon{
+        background: white;
+        color: rgb(0, 0, 143);
+      }
+      .calculateButton.active{
+        background: transparent;
+        text-align: left;
+      }
+      #results{
+        position: absolute;
+        z-index: 200;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-image: -webkit-linear-gradient(rgb(0, 0, 143) 0%, rgb(51, 167, 255) 100%);
+      }
+      
+      @media screen and (min-width: 640px) {
+        .col, .col-header{
+          width: 50%;
+          top: 50px;
+        }
+        .col{
+          padding-top: 40px;
+        }
+        .col-header{
+          padding: 10px;
+          padding-left: 20px;
+          background-color: rgb(0, 0, 143);
+          width: 50%;
+        }
+        .left .expanded .field,
+        .left .expanded .value{
+          display: none;
+        }
+        .left .field.filled{
+          display: block;
+        }
+        .center{
+          left: 50%;
+          display: block;
+        }
+        .center .field{
+          margin-bottom: 0px;
+        }
+        .field, .value, .expander{
+          margin-right: 4px;
+        }
+        header{
+          height: 50px;
+        }
+        #calculateButton{
+          position: absolute;
+          z-index: 500;
+          bottom: 0px;
+        }
+      }
+      @media screen and (min-width: 960px) {
+        .col, .col-header{
+          width: 33.333333%;
+        }
+        .center{
+          left: 33.333333%;
+        }
+        .center .values{
+          display: none;
+        }
+        .right{
+          left: 66.666666%;
+          display: block;
+        }
+      }
+    </style>
   </head>
   <body>
-  
-    <main id="app">
-      
-      <form ="patientDetails" data-bind="css: {hidden: loading() || calculating()}">
-        
-        <h1>Patient Details</h1>
-        
-        <fieldset class="">
-          <legend>Gender</legend>
-          <label><input type="radio" name="gender" value="male" data-bind="checked: gender">Male</label>
-          <label><input type="radio" name="gender" value="female" data-bind="checked: gender">Female</label>
-        </fieldset>
+    
+    <header>
+      <figure id="logo"></figure>
+      <figure id="sponsor"></figure>
+    </header>
+    
+    <article id="form" class="page">
+      <section class="col left">
+        <h1 class="col-header">Patient Details</h1>
         
         <fieldset>
-          <legend>Age</legend>
-          <input type="range">
-        </fieldset>
-        
-        <fieldset>
-          <legend>Neurological Symptoms</legend>
-          
-          <ul class="options" data-bind="
-            foreach: symptoms.array,
-            css: {expanded: optionsExpanded() == 'symptoms'}
+          <legend class="field-label">Neurological Symptoms</legend>
+          <ul data-bind="
+            foreach: symptoms,
+            css: { expanded: optionsExpanded() == 'symptoms' }
           ">
-            <li data-bind="
-              css: {selected: $data.value()},
-              click: function(){
-                $parent.toggle($data.value);
-              }
+            <li class="field" data-bind="
+              click: function(){ $root.toggle(value); },
+              css: { filled: value }
             ">
-              <div style="position: relative;">
-                <span class="label" data-bind="text: label"></span>
-                <span class="icon"></span>
-              </div>
+              <span data-bind="text: label"></span>
+              <span class="icon"></span>
             </li>
           </ul>
-          
           <div class="expander" data-bind="
-            click: function(){ toggle(optionsExpanded, 'symptoms') }, 
-            css: {highlighted: optionsExpanded() == 'symptoms'},
-            text: (optionsExpanded() == 'symptoms')? 'Finished': 'Add'">
-          </div>
+            click: function(){ 
+              $root.toggle($root.optionsExpanded, 'symptoms'); 
+              $root.toggle($root.valuesExpanded); 
+            }, 
+            css: { active: $root.optionsExpanded() == 'symptoms' },
+            text: ($root.optionsExpanded() == 'symptoms')? 'Finished': 'Add'
+          "></div>
         </fieldset>
         
         <fieldset>
-          <legend>Clinical Considerations</legend>
-          
-          <ul class="options" data-bind="
-            foreach: clinicalConsiderations.array,
-            css: {expanded: optionsExpanded() == 'clinicalConsiderations'}
+          <legend class="field-label">Clinical Considerations</legend>
+          <ul data-bind="
+            foreach: considerations,
+            css: { expanded: optionsExpanded() == 'considerations' }
           ">
-            <li data-bind="
-              css: {selected: $data.value()},
-              click: function(){
-                $parent.toggle($data.value);
-              }
+            <li class="field" data-bind="
+              click: function(){ $root.toggle(value); },
+              css: { filled: value }
             ">
-              <div style="position: relative">
-                <span class="label" data-bind="text: label"></span>
-                <span class="icon"></span>
-              </div>
+              <span data-bind="text: label"></span>
+              <span class="icon"></span>
             </li>
           </ul>
-          
           <div class="expander" data-bind="
-            click: function(){ toggle(optionsExpanded, 'clinicalConsiderations') }, 
-            css: {highlighted: optionsExpanded() == 'clinicalConsiderations'},
-            text: (optionsExpanded() == 'clinicalConsiderations')? 'Finished': 'Add'">
-          </div>
-          
+            click: function(){ 
+              $root.toggle($root.optionsExpanded, 'considerations'); 
+              $root.toggle($root.valuesExpanded); 
+            }, 
+            css: { active: $root.optionsExpanded() == 'considerations' },
+            text: ($root.optionsExpanded() == 'considerations')? 'Finished': 'Add'
+          "></div>
         </fieldset>
         
         <fieldset>
-          <legend>Laboratory Tests</legend>
-          
-          <ul class="options" data-bind="
-            foreach: {data: laboratoryTests.array, as: 'option'},
-            css: {expanded: optionsExpanded() == 'laboratoryTests'}
+          <legend class="field-label">Laboratory Tests</legend>
+          <ul data-bind="
+            css: { expanded: optionsExpanded() == 'labTests' },
+            foreach: { data: labTests, as: 'option' }
           ">
-            <li data-bind="
-              css: {selected: option.value()},
-              click: function(){
+            <li class="field" data-bind="
+              click: function(){ 
                 if(option.value()){
                   option.value(false);
+                } else {
+                  $root.toggle($root.valuesExpanded, option.name);
                 }
-                $root.toggle($root.valuesExpanded, option.name);
-              }
+              },
+              css: { filled: option.value }
             ">
-              <div style="position: relative">
-                <span class="label "data-bind="text: label"></span>
-                <span class="value" data-bind="
-                  visible: option.value,
-                  text: option.value() + ' ' + option.unit
-                "></span>
-              </div>
-              
-              
-              <ul class="values" data-bind="
-                foreach: {data: $root.valueArray(option), as: 'value'},
-                css: {expanded: $root.valuesExpanded() == option.name}">
-                <li data-bind="
+              <span data-bind="text: option.label"></span>
+              <span class="current-value" data-bind="
+                visible: option.value,
+                text: option.value() + ' ' + option.unit
+              "></span>
+              <span class="icon"></span>
+            </li>
+            <li>
+              <ul data-bind="
+                foreach: { data: $root.valueArray(option), as: 'value' },
+                css: { expanded: $root.valuesExpanded() == option.name }
+              ">
+                <li class="value" data-bind="
                   text: value + ' ' + option.unit,
-                  click: function (d,e){
-                    $root.toggle(option.value, value);
-                    $root.toggle($root.valuesExpanded, option.name);
-                    e.stopPropagation();
-                  }
+                  click: function (){
+                    if(option.value()){
+                      option.value(false);
+                    } else {
+                      $root.toggle(option.value, value);
+                      $root.toggle($root.valuesExpanded, option.name);
+                    }
+                  },
+                  clickBubble: false
                 ">
                 </li>
               </ul>
             </li>
           </ul>
-          
           <div class="expander" data-bind="
-            click: function(){ toggle(optionsExpanded, 'laboratoryTests'); }, 
-            css: {highlighted: optionsExpanded() == 'laboratoryTests'},
-            text: (optionsExpanded() == 'laboratoryTests')? 'Finished': 'Add'">
-          </div>
-          
+            click: function(){ 
+              $root.toggle($root.optionsExpanded, 'labTests');
+              $root.toggle($root.valuesExpanded); 
+            }, 
+            css: { active: $root.optionsExpanded() == 'labTests' },
+            text: ($root.optionsExpanded() == 'labTests')? 'Finished': 'Add'
+          "></div>
         </fieldset>
         
-      </form>
+        <footer class="calculateButton" data-bind="
+          css: {active: calculating()},
+          click: function(){ 
+            toggle(calculating);
+          }
+        ">
+          <span data-bind="text: calculating()? '': 'Calculate' "></span>
+          <span class="icon" data-bind="text: calculating()? '^': 'v' "></span>
+        </footer>
+        
+      </section>
+      <section class="col center">
       
-      <article id="results" data-bind="visible: calculating">
-        <section>
-          <h1>FluRex* Score <small>*Estimated overall probability of success for fluid restriction</small></h1>
-          <div class="circle">81<sub>%</sub></div>
-          <hr>
-          <dl>
-            <dt>Mean Days for Response</dt>
-              <dd>2.7</dd>
-          </dl>
-        </section>
-        <section>
-          <h1>Serum [Na+] Correction</h1>
-          <figure>
-            <figcaption>
-              Est. Mean 2.7 days<br>
-              95% CI: 0.9-4.6 days
-            </figcaption>
-          </figure>
-        </section>
-      </article>
-      
-      <footer data-bind="
-        click: function(){ toggle(calculating); },
-        css: { highlighted: !calculating() }">
-        <span data-bind="text: calculating()? '': 'Calculate'"></span>
-        <span class="icon" data-bind="text: calculating()? '&lt;': '&gt;'"></span>
-      </footer>
-      
-    </main>
+        <h1 class="col-header" data-bind="visible: $root.optionsExpanded() == 'symptoms'">Neurological Symptoms</h1>
+        <ul data-bind="
+          foreach: symptoms,
+          css: { expanded: $root.optionsExpanded() == 'symptoms' }
+        ">
+          <li class="field" data-bind="
+            click: function(){ $root.toggle(value); },
+            css: { filled: value }
+          ">
+            <span data-bind="text: label"></span>
+            <span class="icon"></span>
+          </li>
+        </ul>
+        
+        <h1 class="col-header" data-bind="visible: $root.optionsExpanded() == 'considerations'">Clinical Considerations</h1>
+        <ul data-bind="
+          foreach: considerations,
+          css: { expanded: $root.optionsExpanded() == 'considerations' }
+        ">
+          <li class="field" data-bind="
+            click: function(){ $root.toggle(value); },
+            css: { filled: value }
+          ">
+            <span data-bind="text: label"></span>
+            <span class="icon"></span>
+          </li>
+        </ul>
+        
+        <h1 class="col-header" data-bind="visible: $root.optionsExpanded() == 'labTests'">Laboratory Tests</h1>
+        <ul data-bind="
+          foreach: { data: labTests, as: 'option' },
+          css: { expanded: $root.optionsExpanded() == 'labTests' } 
+        ">
+          <li class="field" data-bind="
+            click: function(){
+              if(option.value()){
+                option.value(false);
+              }
+              $root.toggle($root.valuesExpanded, option.name);
+            },
+            css: { filled: option.value }
+          ">
+            <span data-bind="text: option.label"></span>
+            <span class="current-value" data-bind="
+              visible: option.value,
+              text: option.value() + ' ' + option.unit
+            "></span>
+            <span class="icon"></span>            
+          </li>
+          <li>
+            <ul class="values" data-bind="
+              foreach: { data: $root.valueArray(option), as: 'value' },
+              css: { expanded: $root.valuesExpanded() == option.name }
+            ">
+              <li class="value" data-bind="
+                text: value + ' ' + option.unit,
+                click: function (){
+                  $root.toggle(option.value, value);
+                  $root.toggle($root.valuesExpanded, option.name);
+                },
+                clickBubble: false
+              ">
+              </li>
+            </ul>
+          </li>
+        </ul>
+        
+      </section>
+      <section class="col right" data-bind="foreach: { data: labTests, as: 'option'}">
+        <h1 class="col-header" data-bind="
+          text: option.label,
+          visible: $root.valuesExpanded() == option.name
+        "></h1>
+        <ul data-bind="
+          foreach: { data: $root.valueArray(option), as: 'value' },
+          css: { expanded: $root.valuesExpanded() == option.name }
+        ">
+          <li class="field" data-bind="
+            click: function (){
+              $root.toggle(option.value, value);
+              $root.toggle($root.valuesExpanded, option.name);
+            },
+            clickBubble: false
+          ">
+            <span data-bind="text: value + ' ' + option.unit"></span>
+          </li>
+        </ul>
+      </section>
+    </article>
+    
+    <article id="results" class="page" data-bind="visible: calculating">
+      <section>
+        <h1>FluRex* Score <small>*Estimated overall probability of success for fluid restriction</small></h1>
+        <div class="circle">81<sub>%</sub></div>
+        <hr>
+        <dl>
+          <dt>Mean Days for Response</dt>
+            <dd>2.7</dd>
+        </dl>
+      </section>
+      <section>
+        <h1>Serum [Na+] Correction</h1>
+        <figure>
+          <figcaption>
+            Est. Mean 2.7 days<br>
+            95% CI: 0.9-4.6 days
+          </figcaption>
+        </figure>
+      </section>
+    </article>
+    
+    <footer class="calculateButton" data-bind="
+      css: {active: calculating()},
+      click: function(){ 
+        toggle(calculating);
+      }
+    ">
+      <span data-bind="text: calculating()? '': 'Calculate' "></span>
+      <span class="icon" data-bind="text: calculating()? '<': '>' "></span>
+    </footer>
     
     <script type="text/javascript" src="js/knockout-2.3.0.debug.js"></script>
     <script type="text/javascript">
     
-      function AssociativeArray(array, key) {
-        // wraps an array of objects with accessors for each element named by the value of the object's key property
-        this.array = array;
+      function ViewModel(){
         
-        for (var i = 0, len = this.array.length; i < len; i++) {
-          this[this.array[i][key]] = function (index) {
-            return function AssociativeArrayAccessor() {
-              return this.array[index];
-            }
-          }(i);
-        }
-      }
-    
-      var app = {
-  
-        inPhoneGap: !document.URL.match(/^(https?|file):/),
+        this.calculating = ko.observable(false);
         
-        viewModel: {
-          loading: ko.observable(true),
-          calculating: ko.observable(false),
-          gender: ko.observable(),
-          toggle: function(prop, val){
-            // prop - a ko.observable to toggle between true/false or val/false
-            // val - the value to toggle from or to
-            
-            if(!val){ // no val supplied
-              val = true; // default to true
-            }
-            
-            if(prop() == val){ 
-              prop(false);
-            } else {
-              prop(val);
-            }
-          },
-          optionsExpanded: ko.observable(),
-          valuesExpanded: ko.observable(),
+        this.toggle = function(prop, val){
+          // prop - a ko.observable to toggle between true/false or val/false
+          // val - the value to toggle from or to
           
-          valueArray: function (option){
-            var out = [];
-            for(v = option.min; v <= option.max; v += option.step){
-              out.push(v);
-            }
-            return out;
-          },
-          symptoms: new AssociativeArray([
-            { name: 'anorexia',     label: 'Anorexia',      value: ko.observable() },
-            { name: 'confusion',    label: 'Confusion',     value: ko.observable() },
-            { name: 'fatigue',      label: 'Fatigue',       value: ko.observable() },
-            { name: 'headache',     label: 'Headache',      value: ko.observable() },
-            { name: 'malaise',      label: 'Malaise',       value: ko.observable() },
-            { name: 'muscleCramps', label: 'Muscle cramps', value: ko.observable() },
-            { name: 'nausea',       label: 'Nausea',        value: ko.observable() },
-            { name: 'unsteadiness', label: 'Unsteadiness',  value: ko.observable() },
-            { name: 'vomiting',     label: 'Vomiting',      value: ko.observable() }
-          ], 'name'),
-          
-          clinicalConsiderations: new AssociativeArray([
-            { name: 'adrenalInsufficiency',   label: 'Adrenal insufficiency',   value: ko.observable() },
-            { name: 'cirrhosis',              label: 'Cirrhosis',               value: ko.observable() },
-            { name: 'cnsImpairment',          label: 'CNS impairment',           value: ko.observable() },
-            { name: 'congestiveHeartFailure', label: 'Congestive heart failure',  value: ko.observable() },
-            { name: 'hypothyroidism',         label: 'Hypothyroidism',          value: ko.observable() },
-            { name: 'renalDysfunction',       label: 'Renal dysfunction',        value: ko.observable() },
-            { name: 'siadh',                  label: 'SIADH',                   value: ko.observable() },
-            { name: 'surgeryOrInjury',        label: 'Surgery or injury',         value: ko.observable() },
-            { name: 'veryYoungOrOldAge',      label: 'Very young/old age',       value: ko.observable() }
-          ], 'name'),
-          
-          laboratoryTests: new AssociativeArray([
-            { name: 'serumNa',  label: 'Serum [Na+]', value: ko.observable(),  unit: 'mEq/l',  min: 20, max: 60, step: 10 },
-            { name: 'serumK',   label: 'Serum [K+]',  value: ko.observable(),  unit: 'g',  min: 10, max: 200, step: 20 },
-            { name: 'uricAcid', label: 'Uric acid',   value: ko.observable(),  unit: 'lbs',  min: 60, max: 92, step: 12 },
-            { name: 'bun',      label: 'BUN',         value: ko.observable(),  unit: 'sqft',  min: 430, max: 600, step: 60 },
-            { name: 'serumCr',  label: 'Serum Cr',    value: ko.observable(),  unit: 'nm',  min: 1, max: 10, step: .5 },
-            { name: 'plasmaOsmolality', label: 'Plasma osmolality', value: ko.observable(),  unit: 'qts',  min: 20, max: 90, step: 4 },
-            { name: 'urineOsmolality',  label: 'Urine osmolality',  value: ko.observable(),  unit: 'in',  min: 150, max: 250, step: 30},
-            { name: 'urineSpecificGravity', label: 'Urine specific gravity',  value: ko.observable(),  unit: 'gal',  min: 700, max: 1980, step: 130 },
-            { name: 'urineSodium',  label: 'Urine sodium',  value: ko.observable(),  unit: 'ml',  min: 120, max: 129, step: 1 },
-            { name: 'urinePotassium', label: 'Urine potassium', value: ko.observable(),  unit: 'ft',  min: 120, max: 129, step: 1 }
-          ], 'name')
-        },
-      
-        initialize: function() {
+          if(!val) val = true; // default to true
+          if(prop() == val) prop(false);
+          else  prop(val);
+        };
         
-          ko.applyBindings(this.viewModel, document.getElementById('app'));
-          
-          // Load phonegap.js if we're in phonegap
-          if(this.inPhoneGap){
-            var script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = "phonegap.js";
-            document.body.appendChild(script);
-            
-            document.addEventListener('deviceready', this.afterLoad);
-          } else {
-            window.addEventListener('load', this.afterLoad);
+        this.valueArray = function(option){
+          var out = [];
+          for(v = option.min; v <= option.max; v += option.step){
+            out.push(v);
           }
-          
-        },
+          return out;
+        };
         
-        afterLoad: function(){
-          app.viewModel.loading(false);
-        }
-      };
-
-      app.initialize();
+        this.optionsExpanded = ko.observable();
+        
+        this.valuesExpanded = ko.observable();
+        
+        this.symptoms = [
+          { name: 'anorexia',     label: 'Anorexia',      value: ko.observable() },
+          { name: 'confusion',    label: 'Confusion',     value: ko.observable() },
+          { name: 'fatigue',      label: 'Fatigue',       value: ko.observable() },
+          { name: 'headache',     label: 'Headache',      value: ko.observable() },
+          { name: 'malaise',      label: 'Malaise',       value: ko.observable() },
+          { name: 'muscleCramps', label: 'Muscle cramps', value: ko.observable() },
+          { name: 'nausea',       label: 'Nausea',        value: ko.observable() },
+          { name: 'unsteadiness', label: 'Unsteadiness',  value: ko.observable() },
+          { name: 'vomiting',     label: 'Vomiting',      value: ko.observable() }
+        ];
+        
+        this.considerations = [
+          { name: 'adrenalInsufficiency',   label: 'Adrenal insufficiency',   value: ko.observable() },
+          { name: 'cirrhosis',              label: 'Cirrhosis',               value: ko.observable() },
+          { name: 'cnsImpairment',          label: 'CNS impairment',           value: ko.observable() },
+          { name: 'congestiveHeartFailure', label: 'Congestive heart failure',  value: ko.observable() },
+          { name: 'hypothyroidism',         label: 'Hypothyroidism',          value: ko.observable() },
+          { name: 'renalDysfunction',       label: 'Renal dysfunction',        value: ko.observable() },
+          { name: 'siadh',                  label: 'SIADH',                   value: ko.observable() },
+          { name: 'surgeryOrInjury',        label: 'Surgery or injury',         value: ko.observable() },
+          { name: 'veryYoungOrOldAge',      label: 'Very young/old age',       value: ko.observable() }
+        ];
+        
+        this.labTests = [
+          { name: 'serumNa',  label: 'Serum [Na+]', value: ko.observable(),  unit: 'mEq/l',  min: 20, max: 60, step: 10 },
+          { name: 'serumK',   label: 'Serum [K+]',  value: ko.observable(),  unit: 'g',  min: 10, max: 200, step: 20 },
+          { name: 'uricAcid', label: 'Uric acid',   value: ko.observable(),  unit: 'lbs',  min: 60, max: 92, step: 12 },
+          { name: 'bun',      label: 'BUN',         value: ko.observable(),  unit: 'sqft',  min: 430, max: 600, step: 60 },
+          { name: 'serumCr',  label: 'Serum Cr',    value: ko.observable(),  unit: 'nm',  min: 1, max: 10, step: .5 },
+          { name: 'plasmaOsmolality', label: 'Plasma osmolality', value: ko.observable(),  unit: 'qts',  min: 20, max: 90, step: 4 },
+          { name: 'urineOsmolality',  label: 'Urine osmolality',  value: ko.observable(),  unit: 'in',  min: 150, max: 250, step: 30},
+          { name: 'urineSpecificGravity', label: 'Urine specific gravity',  value: ko.observable(),  unit: 'gal',  min: 700, max: 1980, step: 130 },
+          { name: 'urineSodium',  label: 'Urine sodium',  value: ko.observable(),  unit: 'ml',  min: 120, max: 129, step: 1 },
+          { name: 'urinePotassium', label: 'Urine potassium', value: ko.observable(),  unit: 'ft',  min: 120, max: 129, step: 1 }
+        ];
+      }
+      
+      function App(){
+        this.viewModel = new ViewModel();
+        ko.applyBindings(this.viewModel);
+      }
+      var app = new App();
     </script>
   </body>
 </html>
