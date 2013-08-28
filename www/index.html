@@ -242,7 +242,7 @@
             </li>
           </ul>
           <div class="expander" data-bind="
-            click: function(){ 
+            tap: function(){ 
               $root.toggle($root.optionsExpanded, 'symptoms'); 
               $root.toggle($root.valuesExpanded); 
             }, 
@@ -258,7 +258,7 @@
             css: { expanded: optionsExpanded() == 'considerations' }
           ">
             <li class="field" data-bind="
-              click: function(){ $root.toggle(value); },
+              tap: function(){ $root.toggle(value); },
               css: { filled: value }
             ">
               <span data-bind="text: label"></span>
@@ -266,7 +266,7 @@
             </li>
           </ul>
           <div class="expander" data-bind="
-            click: function(){ 
+            tap: function(){ 
               $root.toggle($root.optionsExpanded, 'considerations'); 
               $root.toggle($root.valuesExpanded); 
             }, 
@@ -282,7 +282,7 @@
             foreach: { data: labTests, as: 'option' }
           ">
             <li class="field" data-bind="
-              click: function(){ 
+              tap: function(){ 
                 if(option.value()){
                   option.value(false);
                 } else {
@@ -305,7 +305,7 @@
               ">
                 <li class="value" data-bind="
                   text: value + ' ' + option.unit,
-                  click: function (){
+                  tap: function (){
                     if(option.value()){
                       option.value(false);
                     } else {
@@ -313,14 +313,14 @@
                       $root.toggle($root.valuesExpanded, option.name);
                     }
                   },
-                  clickBubble: false
+                  tapBubble: false
                 ">
                 </li>
               </ul>
             </li>
           </ul>
           <div class="expander" data-bind="
-            click: function(){ 
+            tap: function(){ 
               $root.toggle($root.optionsExpanded, 'labTests');
               $root.toggle($root.valuesExpanded); 
             }, 
@@ -331,7 +331,7 @@
         
         <footer class="calculateButton" data-bind="
           css: {active: calculating()},
-          click: function(){ 
+          tap: function(){ 
             toggle(calculating);
           }
         ">
@@ -348,7 +348,7 @@
           css: { expanded: $root.optionsExpanded() == 'symptoms' }
         ">
           <li class="field" data-bind="
-            click: function(){ $root.toggle(value); },
+            tap: function(){ $root.toggle(value); },
             css: { filled: value }
           ">
             <span data-bind="text: label"></span>
@@ -362,7 +362,7 @@
           css: { expanded: $root.optionsExpanded() == 'considerations' }
         ">
           <li class="field" data-bind="
-            click: function(){ $root.toggle(value); },
+            tap: function(){ $root.toggle(value); },
             css: { filled: value }
           ">
             <span data-bind="text: label"></span>
@@ -376,7 +376,7 @@
           css: { expanded: $root.optionsExpanded() == 'labTests' } 
         ">
           <li class="field" data-bind="
-            click: function(){
+            tap: function(){
               if(option.value()){
                 option.value(false);
               }
@@ -398,11 +398,11 @@
             ">
               <li class="value" data-bind="
                 text: value + ' ' + option.unit,
-                click: function (){
+                tap: function (){
                   $root.toggle(option.value, value);
                   $root.toggle($root.valuesExpanded, option.name);
                 },
-                clickBubble: false
+                tapBubble: false
               ">
               </li>
             </ul>
@@ -420,11 +420,11 @@
           css: { expanded: $root.valuesExpanded() == option.name }
         ">
           <li class="field" data-bind="
-            click: function (){
+            tap: function (){
               $root.toggle(option.value, value);
               $root.toggle($root.valuesExpanded, option.name);
             },
-            clickBubble: false
+            tapBubble: false
           ">
             <span data-bind="text: value + ' ' + option.unit"></span>
           </li>
