@@ -590,8 +590,8 @@
         
         ko.bindingHandlers.tap = {
           init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext){
-            element.addEventListener('mousedown', valueAccessor());
             element.addEventListener('touchstart', valueAccessor());
+            //element.addEventListener('mousedown', valueAccessor());
           }
         }
         
