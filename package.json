@@ -1,0 +1,12 @@
+{
+  "name": "GapApp",
+  "version": "1.0.0",
+  "description": "A Harp App on Heroku",
+  "dependencies": {
+    "express": "3.3.x"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  }
+}
