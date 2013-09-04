@@ -435,11 +435,11 @@
     <article id="results" class="page" data-bind="visible: calculating">
       <section>
         <h1>FluRex* Score <small>*Estimated overall probability of success for fluid restriction</small></h1>
-        <div class="circle"><span data-bind="text: score">81</span><sub>%</sub></div>
+        <div class="circle"><span data-bind="text: score"></span><sub>%</sub></div>
         <hr>
         <dl>
           <dt>Mean Days for Response</dt>
-            <dd>2.7</dd>
+            <dd data-bind="text: meanDays"></dd>
         </dl>
       </section>
       <section>
@@ -456,7 +456,7 @@
     <footer class="calculateButton" data-bind="
       css: {active: calculating()},
       click: function(){
-        app.doCalculation();
+        app.calculate();
         toggle(calculating);
       }
     ">
@@ -467,13 +467,37 @@
     <script type="text/javascript" src="js/knockout-2.3.0.debug.js"></script>
     <script type="text/javascript">
     
-
+      function App(){
+        
+        this.calculator = new Calc();
+        
+        ko.extenders.corresponds = function(target, field){
+          // links a ViewModel property to a Calculator property
+          target.subscribe(function(newValue){
+            app.calculator[field] = newValue;
+          });
+          return target;
+        }
+        
+        ko.bindingHandlers.tap = {
+          init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext){
+            element.addEventListener('ontouchstart' in window? 'touchstart': 'mousedown', valueAccessor());
+          }
+        }
+        
+        this.viewModel = new ViewModel();
+        
+        ko.applyBindings(this.viewModel);
+        
+        this.calculate = function (){
+          this.viewModel.score(this.calculator.getScore());
+          this.viewModel.meanDays(this.calculator.getMeanDays());
+        }
+      }
+      var app = new App();
+      
     
       function ViewModel(){
-        
-        this.calculating = ko.observable(false);
-        
-        this.score = ko.observable(0);
         
         this.toggle = function(prop, val){
           // prop - a ko.observable to toggle between true/false or val/false
@@ -485,7 +509,7 @@
         };
         
         this.valueArray = function(option){
-          // used on labTests to get an array of values we can create menu
+          // used on labTests to get an array of values we can create menu with
           var out = [];
           for(v = option.min; v <= option.max; v += option.step){
             out.push(v);
@@ -533,12 +557,17 @@
           { name: 'urineSodium',  label: 'Urine sodium',  value: ko.observable().extend({ corresponds: 'urineSodium' }),  unit: 'ml',  min: 120, max: 129, step: 1 },
           { name: 'urinePotassium', label: 'Urine potassium', value: ko.observable().extend({ corresponds: 'urinePotassium' }),  unit: 'ft',  min: 120, max: 129, step: 1 }
         ];
+        
+        this.calculating = ko.observable(false);
+        
+        this.score = ko.observable(0);
+        this.meanDays = ko.observable(0);
       }
       
       
       function Calc(){
-        // an example of a Calculator Model object that exposes an interface for caclulating a score based on inputs
-      
+        // an example of a Calculator Model object that exposes an interface for calculating a score based on inputs
+        
         this.anorexia     = '';
         this.confusion    = '';
         this.fatigue      = '';
@@ -570,40 +599,18 @@
         this.urineSodium          = '';
         this.urinePotassium       = '';
         
-        this.calculate = function(){
-          // do some fancy math to get a score
-          return 50;
+        this.getScore = function(){
+          // do some fancy math
+          return Math.floor(Math.random()*100);
+        }
+        
+        this.getMeanDays = function(){
+          // do some fancy math
+          return Math.floor((Math.random()*10)*10)/10;
         }
       }
       
-      function App(){
-        
-        this.calculator = new Calc();
-        
-        ko.extenders.calculable = function(target, field){
-          // updates a field on the app's calculator model when the viewModel property is updated
-          target.subscribe(function(newValue){
-            app.calculator[field] = newValue;
-          });
-          return target;
-        }
-        
-        ko.bindingHandlers.tap = {
-          init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext){
-            element.addEventListener('touchstart', valueAccessor());
-            //element.addEventListener('mousedown', valueAccessor());
-          }
-        }
-        
-        this.viewModel = new ViewModel();
-        
-        ko.applyBindings(this.viewModel);
-        
-        this.doCalculation = function (){
-          this.viewModel.score(this.calculator.calculate());
-        }
-      }
-      var app = new App();
+      
     </script>
   </body>
 </html>
