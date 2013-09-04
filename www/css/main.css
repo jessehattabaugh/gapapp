@@ -1,108 +1,205 @@
-* {
-  box-sizing: border-box; }
-
-body {
-  background-image: -webkit-linear-gradient(#00008f 0%, #33a7ff 100%);
-  background-attachment: fixed; }
-
-#app {
-  display: block;
+*{
+  box-sizing: border-box;
+}
+body{
+  margin: 0;
+  padding: 0;
   color: white;
   font-family: sans-serif;
-  height: 100%;
-  /* Extensible/General Classes ***********************************************/ }
-  #app fieldset {
-    margin-top: 20px; }
-    #app fieldset legend {
-      padding: 5px;
-      padding-left: 10px; }
-  #app h1 {
-    background: black;
-    font-size: 16px;
-    padding: 10px;
-    text-align: center; }
-  #app .options li {
-    list-style: none;
-    background: rgba(255, 255, 255, 0.25);
-    padding: 5px;
-    padding-left: 10px;
-    margin-bottom: 5px; }
-    #app .options li.selected {
-      background: rgba(255, 255, 255, 0.5); }
-      #app .options li.selected .icon:before {
-        content: "x"; }
-    #app .options li .icon {
-      position: absolute;
-      right: 5px;
-      top: 0px; }
-      #app .options li .icon:before {
-        content: "+"; }
-    #app .options li .value {
-      position: absolute;
-      right: 5px;
-      top: 0px; }
-  #app .options:not(.expanded) li:not(.selected) {
-    height: 0px;
-    overflow: hidden; }
-  #app .values:not(.expanded) li:not(.selected) {
-    height: 0px;
-    overflow: hidden; }
-  #app .expander {
-    padding: 5px;
-    padding-left: 10px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #33a7ff; }
-  #app #results {
-    position: absolute;
-    top: 0px;
-    left: 0px; }
-  #app footer {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    padding: 5px; }
-    #app footer.highlighted {
-      text-align: right; }
-  #app .reset, #app body, #app fieldset, #app .options, #app .options:not(.expanded) li:not(.selected), #app .values, #app .values:not(.expanded) li:not(.selected) {
-    margin: 0;
-    padding: 0;
-    border: none;
-    background: transparent; }
-  #app .hidden {
-    display: none; }
-  #app .icon {
-    display: inline-block;
-    border-radius: 10px;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.5);
-    color: #00008f; }
-  #app .highlighted {
-    background-color: #fcd400;
-    color: #00008f; }
-    #app .highlighted .icon {
-      background: #00008f;
-      color: #fcd400; }
+  background-attachment: fixed;
+  background-image: -webkit-linear-gradient(rgb(0, 0, 143) 0%, rgb(51, 167, 255) 100%);
+}
+ul{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+fieldset{
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+.page{
+  
+}
+.col{
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+.left{
+  width: 100%;
+}
+.center{
+  display: none;
+}
+.right{
+  display: none;
+}
+.col-header{
+  position: fixed;
+  z-index: 100;
+  margin: 0;
+  font-weight: normal;
+}
+.center .col-header, .right .col-header{
+  color: rgb(251, 213, 0);
+}
+.field-label{
+  padding-left: 15px;
+  padding-bottom: 5px;
+  padding-top: 30px
+}
+.field{
+  padding: 8px;
+  padding-left: 20px;
+  display: none;
+  background: rgba(255, 255, 255, 0.3);
+  color: rgb(55, 185, 252);
+  margin-top: 2px;
+}
+.current-value{
+  position: absolute;
+  right: 40px;
+}
+.icon{
+  position: absolute;
+  right: 10px;
+  display: inline-block;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  border: 1px solid rgb(55, 185, 252);
+  vertical-align: middle;
+}
+.expanded > .field,
+.expanded > .value,
+.left .field.filled{
+  display: block;
+}
+.filled{
+  background: rgba(255, 255, 255, 0.4);
+  color: white;
+}
+.filled .icon{
+  background: white;
+  border: none;
+  color: rgb(55, 185, 252);
+}
+.filled .icon:before{
+  content: 'x';
+}
+.value{
+  padding: 5px;
+  padding-left: 30px;
+  display: none;
+  background: rgba(255, 255, 255, 0.3);
+}
+.expander{
+  display: block;
+  padding: 5px;
+  padding-left: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  color: rgb(55, 185, 252);
+}
+.expander.active{
+  background-color: rgb(251, 213, 0);
+  color: rgb(0, 0, 143);
+}
+.calculateButton{
+  background: rgb(251, 213, 0);
+  width: 100%;
+  padding: 10px;
+  height: 35px;
+  text-align: right;
+  color: rgb(0, 0, 143);
+}
+.calculateButton .icon{
+  background: rgb(0, 0, 143);
+  border: none;
+  position: static;
+  color: rgb(251, 213, 0);
+}
+.calculateButton.active .icon{
+  background: white;
+  color: rgb(0, 0, 143);
+}
+.calculateButton.active{
+  background: transparent;
+  text-align: left;
+}
+#results{
+  position: absolute;
+  z-index: 200;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: -webkit-linear-gradient(rgb(0, 0, 143) 0%, rgb(51, 167, 255) 100%);
+}
 
-@media screen and (min-width: 500px) {
-  #app form, #app .options.expanded, #app .values.expanded {
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    height: 100%;
-    width: 300px; }
-  #app h1 {
-    background: rgba(100, 100, 255, 0.75); }
-  #app .options.expanded {
+@media screen and (min-width: 640px) {
+  body{
+    font-size: 20px
+  }
+  .col, .col-header{
+    width: 50%;
+    top: 50px;
+  }
+  .col{
+    padding-top: 40px;
+  }
+  .col-header{
+    padding: 10px;
+    padding-left: 20px;
+    background-color: rgb(0, 0, 143);
+    width: 50%;
+  }
+  .left .expanded .field,
+  .left .expanded .value{
+    display: none;
+  }
+  .left .field.filled{
+    display: block;
+  }
+  .center{
+    left: 50%;
+    display: block;
+  }
+  .center .field{
+    margin-bottom: 0px;
+  }
+  .field, .value, .expander{
+    margin-right: 4px;
+  }
+  header{
+    height: 50px;
+  }
+  .calculateButton{
     position: absolute;
-    top: 0px;
-    left: 305px;
-    width: 610px; }
-    #app .options.expanded li {
-      width: 300px; }
-  #app .values.expanded {
-    position: absolute;
-    top: 0px;
-    left: 305px;
-    width: 300px; } }
+    z-index: 500;
+    bottom: 0px;
+  }
+  .left .caclulateButton{
+    display: none;
+  }
+  
+}
+@media screen and (min-width: 960px) {
+  .col, .col-header{
+    width: 33.333333%;
+  }
+  .center{
+    left: 33.333333%;
+  }
+  .center .values{
+    display: none;
+  }
+  .right{
+    left: 66.666666%;
+    display: block;
+  }
+}
