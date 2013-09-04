@@ -467,8 +467,8 @@
     <script type="text/javascript" src="js/knockout-2.3.0.debug.js"></script>
     <script type="text/javascript">
     
-
-    
+      if(typeof ko == 'undefined') var ko = {};
+      
       function ViewModel(){
         
         this.calculating = ko.observable(false);
@@ -487,7 +487,7 @@
         this.valueArray = function(option){
           // used on labTests to get an array of values we can create menu
           var out = [];
-          for(v = option.min; v <= option.max; v += option.step){
+          for(var v = option.min; v <= option.max; v += option.step){
             out.push(v);
           }
           return out;
@@ -526,7 +526,7 @@
           { name: 'serumK',   label: 'Serum [K+]',  value: ko.observable().extend({ corresponds: 'serumK' }),  unit: 'g',  min: 10, max: 200, step: 20 },
           { name: 'uricAcid', label: 'Uric acid',   value: ko.observable().extend({ corresponds: 'uricAcid' }),  unit: 'lbs',  min: 60, max: 92, step: 12 },
           { name: 'bun',      label: 'BUN',         value: ko.observable().extend({ corresponds: 'bun' }),  unit: 'sqft',  min: 430, max: 600, step: 60 },
-          { name: 'serumCr',  label: 'Serum Cr',    value: ko.observable().extend({ corresponds: 'serumCr' }),  unit: 'nm',  min: 1, max: 10, step: .5 },
+          { name: 'serumCr',  label: 'Serum Cr',    value: ko.observable().extend({ corresponds: 'serumCr' }),  unit: 'nm',  min: 1, max: 10, step: 0.5 },
           { name: 'plasmaOsmolality', label: 'Plasma osmolality', value: ko.observable().extend({ corresponds: 'plasmaOsmolality' }),  unit: 'qts',  min: 20, max: 90, step: 4 },
           { name: 'urineOsmolality',  label: 'Urine osmolality',  value: ko.observable().extend({ corresponds: 'urineOsmolality' }),  unit: 'in',  min: 150, max: 250, step: 30},
           { name: 'urineSpecificGravity', label: 'Urine specific gravity',  value: ko.observable().extend({ corresponds: 'urineSpecificGravity' }),  unit: 'gal',  min: 700, max: 1980, step: 130 },
@@ -573,12 +573,14 @@
         this.calculate = function(){
           // do some fancy math to get a score
           return 50;
-        }
+        };
       }
       
       function App(){
         
         this.calculator = new Calc();
+        
+        /* Observable Extenders **********************************************/
         
         ko.extenders.calculable = function(target, field){
           // updates a field on the app's calculator model when the viewModel property is updated
@@ -586,14 +588,16 @@
             app.calculator[field] = newValue;
           });
           return target;
-        }
+        };
+        
+        /* Custom Bindings ***************************************************/
         
         ko.bindingHandlers.tap = {
           init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext){
             element.addEventListener('touchstart', valueAccessor());
             //element.addEventListener('mousedown', valueAccessor());
           }
-        }
+        };
         
         this.viewModel = new ViewModel();
         
@@ -601,7 +605,7 @@
         
         this.doCalculation = function (){
           this.viewModel.score(this.calculator.calculate());
-        }
+        };
       }
       var app = new App();
     </script>
