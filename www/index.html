@@ -605,6 +605,7 @@
           app.viewModel.loading(false);
         };
         
+        
         /* Observable Extenders **********************************************/
         
         ko.extenders.calculable = function(target, field){
@@ -614,6 +615,7 @@
           });
           return target;
         };
+        
         
         /* Custom Bindings ***************************************************/
         
@@ -635,7 +637,7 @@
         
         this.calculator = new Calc();
         
-        this.doCalculation = function (){
+        this.calculate = function (){
           this.viewModel.score(this.calculator.getScore());
           this.viewModel.meanDays(this.calculator.getMeanDays());
         };
