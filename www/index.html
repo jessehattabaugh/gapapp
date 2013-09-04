@@ -471,6 +471,8 @@
       
       function ViewModel(){
         
+        this.loading = ko.observable(true);
+        
         this.calculating = ko.observable(false);
         
         this.score = ko.observable(0);
@@ -577,6 +579,24 @@
       }
       
       function App(){
+        
+        this.inPhoneGap = !document.URL.match(/^(https?|file):/);
+        
+        if(this.inPhoneGap){ // Load phonegap.js only if we're in phonegap
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          script.src = "phonegap.js";
+          document.body.appendChild(script);
+          
+          document.addEventListener('deviceready', this.afterLoad);
+          
+        } else { // in a browser, do it the old fasioned way
+          window.addEventListener('load', this.afterLoad);
+        }
+      
+        this.afterLoad = function(){
+          app.viewModel.loading(false);
+        };
         
         this.calculator = new Calc();
         
