@@ -24,8 +24,8 @@ fieldset{
 }
 .col{
   position: absolute;
-  top: 0px;
-  bottom: 0px;
+  top: 0;
+  bottom: 0;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
 }
@@ -186,8 +186,8 @@ fieldset{
   .left .caclulateButton{
     display: none;
   }
-  
 }
+
 @media screen and (min-width: 960px) {
   .col, .col-header{
     width: 33.333333%;
