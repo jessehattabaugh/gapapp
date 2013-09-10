@@ -1,4 +1,9 @@
-function App(){
+function App(viewModel, calculator){
+  
+  viewModel.app = this;
+  calculator.app = this;
+  this.viewModel = viewModel;
+  this.calculator = calculator;
   
   this.inPhoneGap = !document.URL.match(/^(https?|file):/);
   
@@ -15,40 +20,8 @@ function App(){
   }
 
   this.afterLoad = function(){
-    app.viewModel.loading(false);
+    this.viewModel.loading(false);
   };
-  
-  
-  /* Observable Extenders **********************************************/
-  
-  ko.extenders.calculable = function(target, field){
-    // updates a field on the app's calculator model when the viewModel property is updated
-    target.subscribe(function(newValue){
-      app.calculator[field] = newValue;
-    });
-    return target;
-  };
-  
-  
-  /* Custom Bindings ***************************************************/
-  
-  ko.bindingHandlers.tap = {
-    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext){
-      element.addEventListener('ontouchstart' in window? 'touchstart': 'mousedown', valueAccessor());
-    }
-  };
-  
-  
-  /* ViewModel stuff ***************************************************/
-  
-  this.viewModel = new ViewModel();
-  
-  ko.applyBindings(this.viewModel);
-  
-  
-  /* Calculator Stuff **************************************************/
-  
-  this.calculator = new Calculator();
   
   this.calculate = function (){
     this.viewModel.score(this.calculator.getScore());

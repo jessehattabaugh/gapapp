@@ -1,30 +1,61 @@
 function ViewModel(){
   
-  this.loading = ko.observable(true);
+  var self = this;
   
-  this.calculating = ko.observable(false);
-  
-  this.toggle = function(prop, val){
-    // prop - a ko.observable to toggle between true/false or val/false
-    // val - the value to toggle from or to
-    
-    if(!val) val = true; // default to true
-    if(prop() == val) prop(false);
-    else  prop(val);
+  /* Observable Extenders ****************************************************/
+  ko.extenders.corresponds = function(target, field){
+    // updates a field on the app's calculator model when the viewModel property is updated
+    target.subscribe(function(newValue){
+      self.app.calculator[field] = newValue;
+    });
+    return target;
   };
   
-  this.valueArray = function(option){
-    // used on labTests to get an array of values we can create menu with
-    var out = [];
-    for(var v = option.min; v <= option.max; v += option.step){
-      out.push(v);
+  /* Custom Bindings *********************************************************/
+  ko.bindingHandlers.tapably = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext){
+      if('ontouchstart' in window){ // device has touch events
+        element.addEventListener('touchstart', function (startEvent){
+          
+          var startX = startEvent.pageX,
+              startY = startEvent.pageY,
+              touchHasNotMoved = true;
+          
+          function whenMove(moveEvent){
+            var moveX = moveEvent.pageX,
+                moveY = moveEvent.pageY,
+                threshold = 10;
+            
+            if (Math.abs(moveX - startX) > threshold ||
+                Math.abs(moveY - startY) > threshold) {
+              touchHasNotMoved = false;
+            }
+          }
+          
+          function whenEnd(endEvent){
+            if(touchHasNotMoved){
+              valueAccessor().call(this);
+            }
+            element.removeEventListener('touchmove', whenMove);
+            element.removeEventListener('touchend', whenEnd);
+          }
+          
+          element.addEventListener('touchmove', whenMove);  
+          element.addEventListener('touchend', whenEnd);
+        });
+      } else { // device doesn't have touch events
+        element.addEventListener('click', valueAccessor());
+      }
     }
-    return out;
   };
   
+  this.loading = ko.observable(true);
+  this.calculating = ko.observable(false);
   this.optionsExpanded = ko.observable();
-  
   this.valuesExpanded = ko.observable();
+  this.calculating = ko.observable(false);
+  this.score = ko.observable(0);
+  this.meanDays = ko.observable(0);
   
   this.symptoms = [
     { name: 'anorexia',     label: 'Anorexia',      value: ko.observable().extend({ corresponds: 'anorexia' }) },
@@ -63,8 +94,27 @@ function ViewModel(){
     { name: 'urinePotassium', label: 'Urine potassium', value: ko.observable().extend({ corresponds: 'urinePotassium' }),  unit: 'ft',  min: 120, max: 129, step: 1 }
   ];
   
-  this.calculating = ko.observable(false);
+  /* Utility methods *********************************************************/
+  this.toggle = function(prop, val){
+    // prop - a ko.observable to toggle between true/false or val/false
+    // val - the value to toggle from or to
+    
+    if(!val) val = true; // default to true
+    if(prop() == val) prop(false);
+    else prop(val);
+  };
   
-  this.score = ko.observable(0);
-  this.meanDays = ko.observable(0);
+  this.valueArray = function(option){
+    // used on labTests to get an array of values we can create a menu with
+    var out = [];
+    for(var v = option.min; v <= option.max; v += option.step){
+      out.push(v);
+    }
+    return out;
+  };
+  
+  ko.applyBindings(this);
 }
+
+// just preventing JSLint warnings
+if(typeof ko == 'undefined') var ko = {};

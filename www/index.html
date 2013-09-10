@@ -4,8 +4,16 @@
     <title>Gap App</title>
     
     <meta charset="utf-8" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=device-dpi" />
+    <meta name="viewport" content="
+      width = device-width,
+      initial-scale = 1.0, 
+      user-scalable = no, 
+      maximum-scale = 1.0, 
+      minimum-scale = 1.0, 
+      target-densitydpi = device-dpi
+    " />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no" />
     
     <link rel="stylesheet" type="text/css" href="css/main.css">
@@ -28,7 +36,7 @@
             css: { expanded: optionsExpanded() == 'symptoms' }
           ">
             <li class="field" data-bind="
-              tap: function(){ $root.toggle(value); },
+              tapably: function(){ $root.toggle(value); },
               css: { filled: value }
             ">
               <span data-bind="text: label"></span>
@@ -36,7 +44,7 @@
             </li>
           </ul>
           <div class="expander" data-bind="
-            tap: function(){ 
+            tapably: function(){ 
               $root.toggle($root.optionsExpanded, 'symptoms'); 
               $root.toggle($root.valuesExpanded); 
             }, 
@@ -52,7 +60,7 @@
             css: { expanded: optionsExpanded() == 'considerations' }
           ">
             <li class="field" data-bind="
-              tap: function(){ $root.toggle(value); },
+              tapably: function(){ $root.toggle(value); },
               css: { filled: value }
             ">
               <span data-bind="text: label"></span>
@@ -60,7 +68,7 @@
             </li>
           </ul>
           <div class="expander" data-bind="
-            tap: function(){ 
+            tapably: function(){ 
               $root.toggle($root.optionsExpanded, 'considerations'); 
               $root.toggle($root.valuesExpanded); 
             }, 
@@ -76,7 +84,7 @@
             foreach: { data: labTests, as: 'option' }
           ">
             <li class="field" data-bind="
-              tap: function(){ 
+              tapably: function(){ 
                 if(option.value()){
                   option.value(false);
                 } else {
@@ -99,7 +107,7 @@
               ">
                 <li class="value" data-bind="
                   text: value + ' ' + option.unit,
-                  tap: function (){
+                  tapably: function (){
                     if(option.value()){
                       option.value(false);
                     } else {
@@ -107,14 +115,14 @@
                       $root.toggle($root.valuesExpanded, option.name);
                     }
                   },
-                  tapBubble: false
+                  tapablyBubble: false
                 ">
                 </li>
               </ul>
             </li>
           </ul>
           <div class="expander" data-bind="
-            tap: function(){ 
+            tapably: function(){ 
               $root.toggle($root.optionsExpanded, 'labTests');
               $root.toggle($root.valuesExpanded); 
             }, 
@@ -122,17 +130,6 @@
             text: ($root.optionsExpanded() == 'labTests')? 'Finished': 'Add'
           "></div>
         </fieldset>
-        
-        <footer class="calculateButton" data-bind="
-          css: {active: calculating()},
-          tap: function(){ 
-            toggle(calculating);
-          }
-        ">
-          <span data-bind="text: calculating()? '': 'Calculate' "></span>
-          <span class="icon" data-bind="text: calculating()? '^': 'v' "></span>
-        </footer>
-        
       </section>
       <section class="col center">
       
@@ -142,7 +139,7 @@
           css: { expanded: $root.optionsExpanded() == 'symptoms' }
         ">
           <li class="field" data-bind="
-            tap: function(){ $root.toggle(value); },
+            tapably: function(){ $root.toggle(value); },
             css: { filled: value }
           ">
             <span data-bind="text: label"></span>
@@ -156,7 +153,7 @@
           css: { expanded: $root.optionsExpanded() == 'considerations' }
         ">
           <li class="field" data-bind="
-            tap: function(){ $root.toggle(value); },
+            tapably: function(){ $root.toggle(value); },
             css: { filled: value }
           ">
             <span data-bind="text: label"></span>
@@ -170,7 +167,7 @@
           css: { expanded: $root.optionsExpanded() == 'labTests' } 
         ">
           <li class="field" data-bind="
-            tap: function(){
+            tapably: function(){
               if(option.value()){
                 option.value(false);
               }
@@ -192,11 +189,11 @@
             ">
               <li class="value" data-bind="
                 text: value + ' ' + option.unit,
-                tap: function (){
+                tapably: function (){
                   $root.toggle(option.value, value);
                   $root.toggle($root.valuesExpanded, option.name);
                 },
-                tapBubble: false
+                tapablyBubble: false
               ">
               </li>
             </ul>
@@ -214,11 +211,11 @@
           css: { expanded: $root.valuesExpanded() == option.name }
         ">
           <li class="field" data-bind="
-            tap: function (){
+            tapably: function (){
               $root.toggle(option.value, value);
               $root.toggle($root.valuesExpanded, option.name);
             },
-            tapBubble: false
+            tapablyBubble: false
           ">
             <span data-bind="text: value + ' ' + option.unit"></span>
           </li>
@@ -249,7 +246,7 @@
     
     <footer class="calculateButton" data-bind="
       css: {active: calculating()},
-      click: function(){
+      tapably: function(){
         app.calculate();
         toggle(calculating);
       }
@@ -259,12 +256,12 @@
     </footer>
     
     <script type="text/javascript" src="js/knockout-2.3.0.debug.js"></script>
-    <script type="text/javascript" src="js/ViewModel.js"></script>
-    <script type="text/javascript" src="js/Calculator.js"></script>
-    <script type="text/javascript" src="js/App.js"></script>
+    <script type="text/javascript" src="js/viewmodel.js"></script>
+    <script type="text/javascript" src="js/calculator.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript">
       // Start the app
-      var app = new App();
+      var app = new App( new ViewModel(), new Calculator() );
     </script>
   </body>
 </html>

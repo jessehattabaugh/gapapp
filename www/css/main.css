@@ -8,6 +8,8 @@ body{
   font-family: sans-serif;
   background-attachment: fixed;
   background-image: -webkit-linear-gradient(rgb(0, 0, 143) 0%, rgb(51, 167, 255) 100%);
+  background-image: -moz-linear-gradient(rgb(0, 0, 143) 0%, rgb(51, 167, 255) 100%);
+  background-image: linear-gradient(rgb(0, 0, 143) 0%, rgb(51, 167, 255) 100%);
 }
 ul{
   padding: 0;
@@ -25,7 +27,7 @@ fieldset{
 .col{
   position: absolute;
   top: 0;
-  bottom: 0;
+  bottom: 30px;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
 }
@@ -116,6 +118,11 @@ fieldset{
   height: 35px;
   text-align: right;
   color: rgb(0, 0, 143);
+  
+  display: block;
+  position: absolute;
+  bottom: 0;
+  z-index: 500;
 }
 .calculateButton .icon{
   background: rgb(0, 0, 143);
@@ -179,9 +186,7 @@ fieldset{
     height: 50px;
   }
   .calculateButton{
-    position: absolute;
-    z-index: 500;
-    bottom: 0px;
+    
   }
   .left .caclulateButton{
     display: none;
